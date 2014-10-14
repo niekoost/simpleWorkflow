@@ -1,4 +1,9 @@
 <?php
+
+namespace niekoost\simpleWorkflow;
+
+use yii\base\Behavior;
+
 /**
  * This class implements all the logic for the simpleWorkflow extension.
  * Following attributes can be initialized when this behavior is attached to the owner component :
@@ -45,7 +50,7 @@
  * </li>
  * </ul>
  */
-class SWActiveRecordBehavior extends CBehavior
+class SWActiveRecordBehavior extends Behavior
 {
 	/**
 	 * @var string  This is the column name where status is stored.
