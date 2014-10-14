@@ -1,3 +1,4 @@
+THIS IS A PRE-RELEASE REPOSITORY, IT IS CURRENTLY NOT IN A WORKING STATE
 ![simpleWorkflow](http://s172418307.onlinehome.fr/project/yiiDemo/images/sw-logo-big.png)
 
 
@@ -13,11 +14,9 @@ It provides features to control the behavior of the active record in its associa
 ##Documentation
 
 ###Requirements
-* Yii 1.1.4 or above
+* Yii 2.0.0 or above
 
 ###Installation
-* Extract the released files under `protected/extensions`.
-* add the SWPhpWorkflowSource component to your configuration
 
 ```php
 'components'=>array(	
