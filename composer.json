@@ -1,0 +1,24 @@
+{
+	"name": "niekoost/simpleWorkflow",
+	"description": "Port of simpleWorkflow for\ Yii2",
+	"type": "yii2-extension",
+	"keywords": ["yii2","extension","simpleWorkflow"],
+    "homepage": "https://github.com/niekoost/simpleWorkflow",
+	"license": "MIT-Clause",
+	"authors": [
+		{
+			"name": "Niek Oost",
+			"email": "niek@oostsoft.nl"
+		}
+	],
+    "require": {
+        "php": ">=5.4.0",
+        "yiisoft/yii2": "*"
+    },
+	"autoload": {
+		"psr-4": {
+			"niekoost\\simpleWorkflow\\": ""
+		}
+	}
+
+}
