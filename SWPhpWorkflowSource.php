@@ -1,4 +1,7 @@
 <?php
+
+namespace niekoost\simpleWorkflow;
+use Yii;
 /**
  * This class gives access to workflow and statuses stored as PHP files.
  * Following attributes can be initialized when the component is configured:
@@ -18,7 +21,7 @@ class SWPhpWorkflowSource extends SWWorkflowSource
 	 * @var string the base path alias where all workflow are stored.By default, it is set to
 	 * application.models.workflows (folder  "protected/models/workflows").
 	 */
-	public $basePath = 'application.models.workflows';
+	public $basePath = 'common/models/workflows';
 	/**
 	 * @var string Definition type for workflow. Allowed values are : class, array. Default is 'array'
 	 */
@@ -36,7 +39,7 @@ class SWPhpWorkflowSource extends SWWorkflowSource
 	public function init()
 	{
 		parent::init();
-		$this->_workflowBasePath = Yii::getPathOfAlias($this->basePath);
+		$this->_workflowBasePath = Yii::getAlias('@' . $this->basePath);
 		if( is_array($this->preload) and count($this->preload)!=0){
 			foreach ( $this->preload as $wfId ) {
 				$this->_load($wfId,true);

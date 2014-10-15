@@ -2,6 +2,7 @@
 
 namespace niekoost\simpleWorkflow;
 
+use Yii;
 use yii\base\Behavior;
 
 /**
@@ -221,9 +222,9 @@ class SWActiveRecordBehavior extends Behavior
 	{
 		
 		if($status instanceof SWNode)
-			$this->getOwner()->{$this->statusAttribute} = $status->toString();
+			$this->owner->{$this->statusAttribute} = $status->toString();
 		elseif( is_string($status))
-			$this->getOwner()->{$this->statusAttribute} = $status;
+			$this->owner->{$this->statusAttribute} = $status;
 		else
 			throw new SWException('SWNode or string expected',SWException::SW_ERR_WRONG_TYPE);
 	}
@@ -257,16 +258,16 @@ class SWActiveRecordBehavior extends Behavior
 				// workflow events are enabled by configuration but the owner component is not
 				// able to handle workflow event : warning
 				
-				Yii::log('events disabled : owner component doesn\'t inherit from '. $this->eventClassName,
-					CLogger::LEVEL_WARNING,self::SW_LOG_CATEGORY);
+				Yii::warning('events disabled : owner component doesn\'t inherit from '. $this->eventClassName, self::SW_LOG_CATEGORY);
+					
 			}
 			$this->enableEvent=false;	// force
 		}
 		
 		parent::attach($owner);
 
-		if( $this->getOwner() instanceof CActiveRecord ){
-			$statusAttributeCol = $this->getOwner()->getTableSchema()->getColumn($this->statusAttribute);
+		if( $this->owner instanceof CActiveRecord ){
+			$statusAttributeCol = $this->owner->getTableSchema()->getColumn($this->statusAttribute);
 			if(!isset($statusAttributeCol) || $statusAttributeCol->type != 'string' ){
 				throw new SWException('attribute '.$this->statusAttribute.' not found',SWException::SW_ERR_ATTR_NOT_FOUND);
 			}
@@ -274,7 +275,7 @@ class SWActiveRecordBehavior extends Behavior
 		
 		// preload the workflow source component
 		
-		$this->_wfs= Yii::app()->{$this->workflowSourceComponent};
+		$this->_wfs= Yii::$app->{$this->workflowSourceComponent};
 		
 		// load the default workflow id now because the owner model maybe able to provide it
 		// together with the whole workflow definition. In this case, this definition must be pushed
@@ -284,7 +285,7 @@ class SWActiveRecordBehavior extends Behavior
 		
 		// autoInsert now !
 		
-		if($this->autoInsert == true && $this->getOwner()->{$this->statusAttribute} == null){
+		if($this->autoInsert == true && $this->owner->{$this->statusAttribute} == null){
 			$this->swInsertToWorkflow($defWid);
 		}
 	}
@@ -311,10 +312,10 @@ class SWActiveRecordBehavior extends Behavior
 				
 				$workflowName=$this->defaultWorkflow;
 			}
-			elseif(method_exists($this->getOwner(),'workflow'))
+			elseif(method_exists($this->owner,'workflow'))
 			{
 				
-				$wf=$this->getOwner()->workflow();
+				$wf=$this->owner->workflow();
 				if( is_array($wf)){
 					
 					// Cool ! the owner is able to provide its own private workflow definition ...and optionally
@@ -323,7 +324,7 @@ class SWActiveRecordBehavior extends Behavior
 					
 					$workflowName=(isset($wf['name'])
 						? $wf['name']
-						: $this->swGetWorkflowSource()->workflowNamePrefix.get_class($this->getOwner())
+						: $this->swGetWorkflowSource()->workflowNamePrefix.get_class($this->owner)
 					);
 					
 					$this->swGetWorkflowSource()->addWorkflow($wf,$workflowName);
@@ -341,7 +342,7 @@ class SWActiveRecordBehavior extends Behavior
 				// ok then, let's use the owner model name as the workflow name and hope that
 				// its definition is available in the workflow basePath.
 				
-				$workflowName=$this->swGetWorkflowSource()->workflowNamePrefix.get_class($this->getOwner());
+				$workflowName=$this->swGetWorkflowSource()->workflowNamePrefix.get_class($this->owner);
 			}
 			$this->defaultWorkflow=$workflowName;
 		}
@@ -373,7 +374,7 @@ class SWActiveRecordBehavior extends Behavior
 		$initialNode=$this->swGetWorkflowSource()->getInitialNode($wfName);
 		
 		$this->onEnterWorkflow(
-			new SWEvent($this->getOwner(),null,$initialNode)
+			new SWEvent($this->owner,null,$initialNode)
 		);
 		$this->_updateStatus($initialNode);
 		$this->_updateOwnerStatus($initialNode);
@@ -395,7 +396,7 @@ class SWActiveRecordBehavior extends Behavior
 				SWException::SW_ERR_STATUS_UNREACHABLE);
 
 		$this->onLeaveWorkflow(
-			new SWEvent($this->getOwner(),$this->_status,null)
+			new SWEvent($this->owner,$this->_status,null)
 		);
 		$this->_status = null;
 		$this->_final  = null;
@@ -512,7 +513,7 @@ class SWActiveRecordBehavior extends Behavior
 	private function _evaluateConstraint($constraint)
 	{
 		return ( $constraint == null or
-			$this->getOwner()->evaluateExpression($constraint) ==true?true:false);
+			$this->owner->evaluateExpression($constraint) ==true?true:false);
 	}
 	/**
 	 * If a expression is attached to the transition, then it is evaluated in the context
@@ -530,8 +531,8 @@ class SWActiveRecordBehavior extends Behavior
 					
 					if( is_string($tr))
 					{
-						$this->getOwner()->evaluateExpression($tr,array(
-							'owner' 		=> $this->getOwner(),
+						$this->owner->evaluateExpression($tr,array(
+							'owner' 		=> $this->owner,
 							'sourceStatus'  => $sourceSt->toString(),
 							'targetStatus'  => $destSt->toString(),
 							'params'   		=> $params)
@@ -539,7 +540,7 @@ class SWActiveRecordBehavior extends Behavior
 					}
 					else
 					{
-						$this->getOwner()->evaluateExpression($tr,array($this->getOwner(),$sourceSt->toString(), $destSt->toString(), $params));
+						$this->owner->evaluateExpression($tr,array($this->owner,$sourceSt->toString(), $destSt->toString(), $params));
 					}
 					
 				}else {
@@ -635,12 +636,12 @@ class SWActiveRecordBehavior extends Behavior
         		);
         	}
 			if($this->swIsNextStatus($value)==false and $swNode->equals($this->swGetStatus()) == false){
-				$this->getOwner()->addError($attribute,Yii::t(self::SW_I8N_CATEGORY,'not a valid next status'));
+				$this->owner->addError($attribute,Yii::t(self::SW_I8N_CATEGORY,'not a valid next status'));
 			}else {
 				$bResult=true;
 			}
         }catch(SWException $e){
-        	$this->getOwner()->addError($attribute,Yii::t(self::SW_I8N_CATEGORY,'value {node} is not a valid status',array(
+        	$this->owner->addError($attribute,Yii::t(self::SW_I8N_CATEGORY,'value {node} is not a valid status',array(
         		'{node}'=>$value)
         	));
         }
@@ -702,7 +703,7 @@ class SWActiveRecordBehavior extends Behavior
 						SWException::SW_ERR_STATUS_UNREACHABLE);
 				
 				$this->onEnterWorkflow(
-					new SWEvent($this->getOwner(),null,$nextNode)
+					new SWEvent($this->owner,null,$nextNode)
 				);
 				$this->_updateStatus($nextNode);
 				$this->_updateOwnerStatus($nextNode);
@@ -719,7 +720,7 @@ class SWActiveRecordBehavior extends Behavior
 					
 				if( $this->swIsNextStatus($nextNode) )
 				{
-					$event=new SWEvent($this->getOwner(),$this->_status,$nextNode);
+					$event=new SWEvent($this->owner,$this->_status,$nextNode);
 						
 					$this->onBeforeTransition($event);
 					$this->onProcessTransition($event);
@@ -783,7 +784,7 @@ class SWActiveRecordBehavior extends Behavior
 		// this behavior could be attached to a CComponent based class other
 		// than CActiveRecord.
 		
-		if($this->getOwner() instanceof CActiveRecord){
+		if($this->owner instanceof CActiveRecord){
 			$ev=array(
 				'onBeforeSave'=> 'beforeSave',
 				'onAfterSave' => 'afterSave',
@@ -795,12 +796,12 @@ class SWActiveRecordBehavior extends Behavior
 		
 		if($this->swIsEventEnabled())
 		{
-			$this->getOwner()->attachEventHandler('onEnterWorkflow',array($this->getOwner(),'enterWorkflow'));
-			$this->getOwner()->attachEventHandler('onBeforeTransition',array($this->getOwner(),'beforeTransition'));
-			$this->getOwner()->attachEventHandler('onAfterTransition',array($this->getOwner(),'afterTransition'));
-			$this->getOwner()->attachEventHandler('onProcessTransition',array($this->getOwner(),'processTransition'));
-			$this->getOwner()->attachEventHandler('onFinalStatus',array($this->getOwner(),'finalStatus'));
-			$this->getOwner()->attachEventHandler('onLeaveWorkflow',array($this->getOwner(),'leaveWorkflow'));
+			$this->owner->attachEventHandler('onEnterWorkflow',array($this->owner,'enterWorkflow'));
+			$this->owner->attachEventHandler('onBeforeTransition',array($this->owner,'beforeTransition'));
+			$this->owner->attachEventHandler('onAfterTransition',array($this->owner,'afterTransition'));
+			$this->owner->attachEventHandler('onProcessTransition',array($this->owner,'processTransition'));
+			$this->owner->attachEventHandler('onFinalStatus',array($this->owner,'finalStatus'));
+			$this->owner->attachEventHandler('onLeaveWorkflow',array($this->owner,'leaveWorkflow'));
 			$ev=array_merge($ev, array(
 				// Custom events
 				'onEnterWorkflow'	 => 'enterWorkflow',
@@ -824,7 +825,7 @@ class SWActiveRecordBehavior extends Behavior
 	{
 		$this->_beforeSaveInProgress = true;
 
-		$ownerStatus = $this->getOwner()->{$this->statusAttribute};
+		$ownerStatus = $this->owner->{$this->statusAttribute};
 		if( $ownerStatus == null &&  $this->swHasStatus() == false )
 		{
 			if($this->autoInsert == true)
@@ -851,7 +852,7 @@ class SWActiveRecordBehavior extends Behavior
 		{
 			$tr=$this->_delayedTransition;
 			$this->_delayedTransition=null;
-			$this->getOwner()->evaluateExpression($tr);
+			$this->owner->evaluateExpression($tr);
 		}
 		
 		foreach ($this->_delayedEvent as $delayedEvent) {
@@ -875,7 +876,7 @@ class SWActiveRecordBehavior extends Behavior
 			// call _init here because 'afterConstruct' is not called when an AR is created
 			// as the result of a query, and we need to initialize the behavior.
 		
-			$status=$this->getOwner()->{$this->statusAttribute};
+			$status=$this->owner->{$this->statusAttribute};
 
 			if( $status != null )
 			{
@@ -913,7 +914,7 @@ class SWActiveRecordBehavior extends Behavior
 	{
 		if( $this->swIsEventEnabled() ){
 			$this->_logEventFire($evName, $event->source, $event->destination);
-			$this->getOwner()->raiseEvent($evName, $event);
+			$this->owner->raiseEvent($evName, $event);
 		}
 	}
 	/**

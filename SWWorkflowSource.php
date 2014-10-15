@@ -1,10 +1,14 @@
 <?php
+
+namespace niekoost\simpleWorkflow;
+
+use yii\base\Component;
 /**
  * This is the base class for all workflow source implementations. It provides
  * basic initialization features and a set of methods that must be implemented
  * by workflow source classes.<br/>
  */
-abstract class SWWorkflowSource extends CApplicationComponent
+abstract class SWWorkflowSource extends Component
 {
 	/**
 	 * @var array list of workflow names that shoumd ne loaded when the component is initialized

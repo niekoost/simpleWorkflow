@@ -18,37 +18,33 @@ It provides features to control the behavior of the active record in its associa
 
 ###Installation
 
+Add to your applications config file (for instance backend/config/main.php)
 ```php
 'components'=>array(	
 	// adding the simple Workflow source component
-	'swSource'=> array(
-		'class'=>'application.extensions.simpleWorkflow.SWPhpWorkflowSource',
+    'swSource'=> array(
+        'class'=>'niekoost\simpleWorkflow\SWPhpWorkflowSource',
 	), ...
 
-```
-* add simpleWorkflow extension base folder to your imports
-
-```php
-'import'=>array(
-	...
-	'application.extensions.simpleWorkflow.*',	// Import simpleWorkflow extension
-), 
 ```
 
 ###Usage
 Once installed and correctly configured, the simpleWorkflow extension will handle the workflow for any model. 
 To enable simpleWorkflow for a given model, you must attach the `SWActiveRecordBehavior` behavior to this model.
- 
+
 ```php
-class MyModel extends CActiveRecord {
-	public function behaviors()
-	{
-		return array(
-			'swBehavior' => array(
-				'class' => 'application.extensions.simpleWorkflow.SWActiveRecordBehavior'
-			)
-		);
-	}
+use Yii;
+use niekoost\simpleWorkflow\SWActiveRecordBehavior;
+
+class MyModel extends \yii\db\ActiveRecord {
+
+    public function behaviors() {
+        return [
+            'swBehavior' => [
+                'class' => SWActiveRecordBehavior::className()
+            ]
+        ];
+    }
 }
 ```
 
