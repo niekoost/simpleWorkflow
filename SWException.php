@@ -1,8 +1,11 @@
 <?php
+
+namespace niekoost\simpleWorkflow;
+
 /**
  * Exception thrown by the simpleWorkflow behavior.
  */
-class SWException extends CException
+class SWException extends \yii\base\Exception
 {
 	const SW_ERR_ATTR_NOT_FOUND=01;
 	const SW_ERR_REETRANCE=02;

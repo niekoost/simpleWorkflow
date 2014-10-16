@@ -69,7 +69,7 @@ class Task_1_Test extends CDbTestCase {
 				'basePath'=> 'application.tests.unit.task.workflows'
 			)
 		);
-		Yii::app()->setComponent('swSource', $component);
+		Yii::$app->setComponent('swSource', $component);
 		
 		$ar = new ModelTask_B();
 	

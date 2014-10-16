@@ -341,8 +341,8 @@ class SWActiveRecordBehavior extends Behavior
 	
 				// ok then, let's use the owner model name as the workflow name and hope that
 				// its definition is available in the workflow basePath.
-				
-				$workflowName=$this->swGetWorkflowSource()->workflowNamePrefix.get_class($this->owner);
+		        $classNameParts = explode('\\', get_class($this->owner));		
+				$workflowName=$this->swGetWorkflowSource()->workflowNamePrefix.end($classNameParts);
 			}
 			$this->defaultWorkflow=$workflowName;
 		}

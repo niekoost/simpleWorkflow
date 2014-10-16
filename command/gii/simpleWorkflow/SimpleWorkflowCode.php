@@ -111,18 +111,18 @@ class SimpleWorkflowCode extends CCodeModel
     	{
     		$this->_workingFile  = Yii::getPathOfAlias($this->workPath).'/'.$file->name;
     		$file->saveAs($this->_workingFile);
-    		Yii::app()->user->setState('wfile', $this->_workingFile);
+    		Yii::$app->user->setState('wfile', $this->_workingFile);
     	}
     	else
     	{
     		// the working file may have been previously uploaded
-    		$this->_workingFile  = Yii::app()->user->getState('wfile');
+    		$this->_workingFile  = Yii::$app->user->getState('wfile');
     	}
     	
     	if( ! file_exists($this->_workingFile))
     	{
     		$this->_workingFile  = null;
-    		Yii::app()->user->setState('wfile', null);
+    		Yii::$app->user->setState('wfile', null);
     		$this->_workflow = array();
     	}
     	else

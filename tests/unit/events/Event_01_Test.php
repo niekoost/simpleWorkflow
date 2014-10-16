@@ -18,7 +18,7 @@ class Event_01_Test extends CDbTestCase {
 			'basePath'=> 'application.tests.unit.events.workflows'
 			)
 		);
-		Yii::app()->setComponent('swSource', $component);
+		Yii::$app->setComponent('swSource', $component);
 	}
 	/**
 	 *
