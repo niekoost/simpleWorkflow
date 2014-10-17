@@ -1,9 +1,12 @@
 <?php
+
+namespace niekoost\simpleWorkflow;
+
 /**
  * this class implements events fired by the simpleWorkflow behavior. This event is fired
  * at different time during a transition (see (see {@link SWActiveRecordBehavior::events()}).
  */
-class SWEvent extends CEvent
+class SWEvent extends \yii\base\Event
 {
 	/**
 	 * @var SWNode source status the owner model is in
@@ -19,9 +22,12 @@ class SWEvent extends CEvent
 	 */
 	public function __construct($sender,$source,$destination)
 	{
-		parent::__construct($sender);
+
+        $this->sender = $sender;
 		$this->source=$source;
 		$this->destination=$destination;
+
+        parent::__construct();
 	}
 }
 ?>

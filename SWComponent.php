@@ -1,11 +1,13 @@
 <?php
+
+namespace niekoost\simpleWorkflow;
 /**
  * This is the base class for all components that needs to handle events
  * fired by the simpleWorkflow behavior.
  * Note that in most cases, this class is not used as the sW behavior is usually
  * attached to a CActiveRecord object.
  */
-class SWComponent extends CComponent
+class SWComponent extends \yii\base\Component
 {
 	public function onEnterWorkflow($event)
 	{

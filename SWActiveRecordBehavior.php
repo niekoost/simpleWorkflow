@@ -3,7 +3,6 @@
 namespace niekoost\simpleWorkflow;
 
 use Yii;
-use yii\base\Behavior;
 
 /**
  * This class implements all the logic for the simpleWorkflow extension.
@@ -51,7 +50,7 @@ use yii\base\Behavior;
  * </li>
  * </ul>
  */
-class SWActiveRecordBehavior extends Behavior
+class SWActiveRecordBehavior extends \yii\base\Behavior
 {
 	/**
 	 * @var string  This is the column name where status is stored.

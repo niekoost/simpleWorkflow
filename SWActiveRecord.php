@@ -1,11 +1,14 @@
 <?php
+
+namespace niekoost\simpleWorkflow;
+
 /**
  * This is the base class for all AR models that needs to handle events
  * fired by the simpleWorkflow behavior.
  * Handling simpleWorkflow events can also be achieved by creating a behavior that
  * inherits from SWActiveRecordBehavior and overload default event handlers
  */
-class SWActiveRecord extends CActiveRecord
+class SWActiveRecord extends yii\db\ActiveRecord
 {
 	public function onEnterWorkflow($event)
 	{

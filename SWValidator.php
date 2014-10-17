@@ -1,4 +1,7 @@
 <?php
+
+namespace niekoost\simpleWorkflow;
+
 /**
  * <p>
  * This validator should be used to validate the 'status' attribute for an active record
@@ -24,7 +27,7 @@
  * model leaves status S1, then the <em>required</em> validator will be applied.
  * </p>
  */
-class SWValidator extends CValidator
+class SWValidator extends \yii\validators\Validator 
 {
 	/**
 	 * @var boolean (default FALSE) Enables simpleWorkflow Validation. When TRUE, the SWValidator not only

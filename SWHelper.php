@@ -1,4 +1,7 @@
 <?php
+
+namespace niekoost\simpleWorkflow;
+
 /**
  * this class provides helper methods for the simpleWorkflow behavior
  */
