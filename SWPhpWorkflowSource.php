@@ -18,8 +18,9 @@ use Yii;
 class SWPhpWorkflowSource extends SWWorkflowSource
 {
 	/**
-	 * @var string the base path alias where all workflow are stored.By default, it is set to
-	 * application.models.workflows (folder  "protected/models/workflows").
+	 * @var string the base path alias where all workflow are stored.
+	 * By default workflows are stored in common/models/workflows (advanced template) to make them available
+     * to all applications. Each workflow-file has a name of the form sw<Model>.php 
 	 */
 	public $basePath = 'common/models/workflows';
 	/**

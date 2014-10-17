@@ -321,9 +321,10 @@ class SWActiveRecordBehavior extends \yii\base\Behavior
 					// a workflow name too. If no workflow name is provided, the model name is used to
 					// identity the workflow
 					
+                    $classNameParts = explode('\\', get_class($this->owner));
 					$workflowName=(isset($wf['name'])
 						? $wf['name']
-						: $this->swGetWorkflowSource()->workflowNamePrefix.get_class($this->owner)
+						: $this->swGetWorkflowSource()->workflowNamePrefix.end($classNameParts)
 					);
 					
 					$this->swGetWorkflowSource()->addWorkflow($wf,$workflowName);
