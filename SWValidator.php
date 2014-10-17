@@ -54,7 +54,7 @@ class SWValidator extends \yii\validators\Validator
      * @param CModel $model the model to validate
      * @param string $attribute the model attribute to validate
      */
-	protected function validateAttribute($model,$attribute)
+	public function validateAttribute($model,$attribute)
     {
     	$value=$model->$attribute;
     	

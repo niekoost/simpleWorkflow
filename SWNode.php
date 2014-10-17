@@ -1,8 +1,10 @@
 <?php
+namespace niekoost\simpleWorkflow;
+
 /**
  * This class implements a graph node for the simpleWorkflow extension.
  */
-class SWNode extends CComponent
+class SWNode extends \yii\base\Component
 {
 	/**
 	 * @var string workflow identifier
@@ -101,7 +103,9 @@ class SWNode extends CComponent
 			{
 				$st=$this->parseNodeId($node,$defaultWorkflowId);
 			}
-			
+if(!Array_key_existS('workflow', $st)) {
+throw new \Exception('workflow missing');
+}
 			$this->_workflowId = $st['workflow'];
 			$this->_id 	       = $st['node'];
 			

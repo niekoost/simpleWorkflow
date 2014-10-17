@@ -100,6 +100,24 @@ class SWActiveRecordBehavior extends \yii\base\Behavior
 	const SW_LOG_CATEGORY='application.simpleWorkflow';
 	const SW_I8N_CATEGORY='simpleworkflow';
 
+    /**
+     * @var array the internalization configuration for this behavior
+     */
+    public $i18n = []; 
+
+    public function init() {
+
+        parent::init();
+        Yii::setAlias('@'.self::SW_I8N_CATEGORY, dirname(__FILE__));
+        if (empty($this->i18n)) {
+            $this->i18n = [
+                'class' => 'yii\i18n\PhpMessageSource',
+                'basePath' => '@' . self::SW_I8N_CATEGORY . '/messages'
+            ];
+        }
+        Yii::$app->i18n->translations[self::SW_I8N_CATEGORY] = $this->i18n;
+
+    }
 
 	/**
 	 * @return reference to the workflow source used by this behavior
@@ -642,7 +660,7 @@ class SWActiveRecordBehavior extends \yii\base\Behavior
 			}
         }catch(SWException $e){
         	$this->owner->addError($attribute,Yii::t(self::SW_I8N_CATEGORY,'value {node} is not a valid status',array(
-        		'{node}'=>$value)
+        		'node'=>$value)
         	));
         }
         return $bResult;
@@ -902,9 +920,9 @@ class SWActiveRecordBehavior extends \yii\base\Behavior
 	{
 		Yii::log(Yii::t('simpleWorkflow','event fired : \'{event}\' status [{source}] -> [{destination}]',
 			array(
-				'{event}'		=> $ev,
-				'{source}'		=> ( $source == null ?'null':$source),
-				'{destination}'	=> $dest,
+				'event'		    => $ev,
+				'source'		=> ( $source == null ?'null':$source),
+				'destination'	=> $dest,
 			)),
 			CLogger::LEVEL_INFO,
 			self::SW_LOG_CATEGORY

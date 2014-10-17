@@ -131,7 +131,7 @@ class SWHelper
 					( $exclude != null && !in_array($nodeObj->toString(), $exclude )) )
 				{
 					$result[$nodeObj->toString()]= ($encodeLabel
-						? CHtml::encode($nodeObj->getLabel())
+						? \yii\helpers\Html::encode($nodeObj->getLabel())
 						: $nodeObj->getLabel()
 					);
 				}
