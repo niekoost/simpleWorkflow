@@ -889,8 +889,8 @@ class SWActiveRecordBehavior extends \yii\base\Behavior
 	 */
 	public function afterFind($event)
 	{
-		if( !$this->getEnabled())
-			return;
+#		if( !$this->getEnabled())
+#			return;
 			
 		try{
 			// call _init here because 'afterConstruct' is not called when an AR is created
