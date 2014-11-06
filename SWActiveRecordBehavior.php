@@ -283,7 +283,7 @@ class SWActiveRecordBehavior extends \yii\base\Behavior
 		
 		parent::attach($owner);
 
-		if( $this->owner instanceof CActiveRecord ){
+		if( $this->owner instanceof \yii\db\ActiveRecord ){
 			$statusAttributeCol = $this->owner->getTableSchema()->getColumn($this->statusAttribute);
 			if(!isset($statusAttributeCol) || $statusAttributeCol->type != 'string' ){
 				throw new SWException('attribute '.$this->statusAttribute.' not found',SWException::SW_ERR_ATTR_NOT_FOUND);
@@ -802,11 +802,13 @@ class SWActiveRecordBehavior extends \yii\base\Behavior
 		// this behavior could be attached to a CComponent based class other
 		// than CActiveRecord.
 		
-		if($this->owner instanceof CActiveRecord){
+		if($this->owner instanceof \yii\db\ActiveRecord){
 			$ev=array(
-				'onBeforeSave'=> 'beforeSave',
-				'onAfterSave' => 'afterSave',
-				'onAfterFind' => 'afterFind'
+				\yii\db\ActiveRecord::EVENT_BEFORE_UPDATE   => 'beforeSave',
+                \yii\db\ActiveRecord::EVENT_BEFORE_INSERT   => 'beforeSave',
+				\yii\db\ActiveRecord::EVENT_AFTER_INSERT    => 'afterSave',
+                \yii\db\ActiveRecord::EVENT_AFTER_UPDATE    => 'afterSave',
+				\yii\db\ActiveRecord::EVENT_AFTER_FIND      => 'afterFind'
 			);
 		} else {
 			$ev=array();
