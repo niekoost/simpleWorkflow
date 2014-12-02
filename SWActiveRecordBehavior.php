@@ -3,6 +3,7 @@
 namespace niekoost\simpleWorkflow;
 
 use Yii;
+use yii\log\Logger;
 
 /**
  * This class implements all the logic for the simpleWorkflow extension.
@@ -767,7 +768,7 @@ class SWActiveRecordBehavior extends \yii\base\Behavior
 			}
 		} catch (CException $e) {
 			$this->_unlock();
-			Yii::log('set status failed : '.$e->getMessage(),CLogger::LEVEL_ERROR,self::SW_LOG_CATEGORY);
+			Yii::getLogger()->log('set status failed : '.$e->getMessage(),Logger::LEVEL_ERROR,self::SW_LOG_CATEGORY);
 			throw $e;
 		}
 		$this->_unlock();
@@ -908,7 +909,7 @@ class SWActiveRecordBehavior extends \yii\base\Behavior
 			}
 			
 		}catch(SWException $e){
-			Yii::log('failed to set status : '.$status. 'message : '.$e->getMessage(), CLogger::LEVEL_ERROR, self::SW_LOG_CATEGORY);
+			Yii::getLogger()->log('failed to set status : '.$status. 'message : '.$e->getMessage(), Logger::LEVEL_ERROR, self::SW_LOG_CATEGORY);
 		}
 	}
 	/**
@@ -920,13 +921,13 @@ class SWActiveRecordBehavior extends \yii\base\Behavior
 	 */
 	private function _logEventFire($ev,$source,$dest)
 	{
-		Yii::log(Yii::t('simpleWorkflow','event fired : \'{event}\' status [{source}] -> [{destination}]',
+		Yii::getLogger()->log(Yii::t('simpleWorkflow','event fired : \'{event}\' status [{source}] -> [{destination}]',
 			array(
 				'event'		    => $ev,
 				'source'		=> ( $source == null ?'null':$source),
 				'destination'	=> $dest,
 			)),
-			CLogger::LEVEL_INFO,
+			Logger::LEVEL_INFO,
 			self::SW_LOG_CATEGORY
 		);
 	}
